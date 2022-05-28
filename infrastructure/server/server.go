@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	health "github.com/julianbarrios/hexserver/infrastructure/server/handlers"
 )
 
 type Server struct {
@@ -27,5 +28,5 @@ func (s *Server) Run() error {
 }
 
 func (s *Server) registerRoutes() {
-	s.engine.GET("")
+	s.engine.GET("/health", health.CheckHandler)
 }

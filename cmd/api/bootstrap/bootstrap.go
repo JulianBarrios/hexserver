@@ -1,7 +1,7 @@
 package bootstrap
 
 import (
-	"github.com/JulianBarrios/hexserver/infrastructure/server"
+	"github.com/julianbarrios/hexserver/infrastructure/server"
 )
 
 const (
