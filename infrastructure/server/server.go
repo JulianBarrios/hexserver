@@ -5,18 +5,24 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	health "github.com/julianbarrios/hexserver/infrastructure/server/handlers"
+	mooc "github.com/julianbarrios/hexserver/infrastructure/data"
+	"github.com/julianbarrios/hexserver/infrastructure/server/handlers/course"
+	"github.com/julianbarrios/hexserver/infrastructure/server/handlers/health"
 )
 
 type Server struct {
 	httpAddr string
 	engine   *gin.Engine
+
+	//dependencies
+	courseRepository mooc.CourseRepository
 }
 
-func New(host string, port uint) Server {
+func New(host string, port uint, courseRepository mooc.CourseRepository) Server {
 	srv := Server{
-		engine:   gin.New(),
-		httpAddr: fmt.Sprintf("%s:%d", host, port),
+		engine:           gin.New(),
+		httpAddr:         fmt.Sprintf("%s:%d", host, port),
+		courseRepository: courseRepository,
 	}
 	srv.registerRoutes()
 	return srv
@@ -28,5 +34,6 @@ func (s *Server) Run() error {
 }
 
 func (s *Server) registerRoutes() {
-	s.engine.GET("/health", health.CheckHandler)
+	s.engine.GET("/health", health.CheckHandler())
+	s.engine.POST("/course", course.CreateCourse(s.courseRepository))
 }
